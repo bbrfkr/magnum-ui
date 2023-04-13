@@ -60,7 +60,7 @@
    * @description A list available image distros for magnum
   */
   function distros() {
-    return ["coreos", "fedora-atomic", "fedora-coreos", "ubuntu"];
+    return ["bke-os", "coreos", "fedora-atomic", "fedora-coreos", "ubuntu"];
   }
 
   run.$inject = [
