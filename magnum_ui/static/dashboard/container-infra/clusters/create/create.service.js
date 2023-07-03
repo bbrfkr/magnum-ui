@@ -12,7 +12,7 @@
  * under the License.
  */
 
-(function() {
+ (function() {
   'use strict';
 
   /**
@@ -82,7 +82,7 @@
 
     function onModalSubmit(context) {
       return magnum.createCluster(buildRequestObject(context.model), false)
-              .then(onRequestSuccess, true);
+        .then(onRequestSuccess, true);
     }
 
     function buildRequestObject(model) {
@@ -105,13 +105,14 @@
       };
 
       // Optional request fields
-      addFieldToRequestObjectIfSet('master_count','master_count');
-      addFieldToRequestObjectIfSet('master_flavor_id','master_flavor_id');
-      addFieldToRequestObjectIfSet('node_count','node_count');
-      addFieldToRequestObjectIfSet('flavor_id','flavor_id');
+      addFieldToRequestObjectIfSet('master_count', 'master_count');
+      addFieldToRequestObjectIfSet('master_flavor_id', 'master_flavor_id');
+      addFieldToRequestObjectIfSet('node_count', 'node_count');
+      addFieldToRequestObjectIfSet('flavor_id', 'flavor_id');
 
       if (!model.create_network) {
-        addFieldToRequestObjectIfSet('fixed_network','fixed_network');
+        addFieldToRequestObjectIfSet('fixed_network', 'fixed_network');
+        addFieldToRequestObjectIfSet('fixed_subnet', 'fixed_subnet');
       }
       // Labels processing order (the following overrides previous):
       // Cluster Templates -> Create Form -> User-defined in 'labels' textarea
@@ -179,7 +180,7 @@
       toast.add('success', interpolate(message.success, [response.data.id]));
 
       var result = actionResult.getActionResult()
-                     .created(resourceType, response.data.id);
+        .created(resourceType, response.data.id);
 
       if (result.result.failed.length === 0 && result.result.created.length > 0) {
         $location.path('/project/clusters');
