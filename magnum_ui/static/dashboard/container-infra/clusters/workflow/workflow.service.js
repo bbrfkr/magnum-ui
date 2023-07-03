@@ -14,7 +14,7 @@
  * under the License.
  */
 
-(function() {
+ (function() {
   'use strict';
 
   /**
@@ -53,15 +53,22 @@
       var schema, form;
 
       // Default <option>s; will be shown in selector as a placeholder
-      var templateTitleMap = [{value: '', name: gettext('Choose a Cluster Template') }];
-      var availabilityZoneTitleMap = [{value: '',
-        name: gettext('Choose an Availability Zone')}];
+      var templateTitleMap = [{value: '', name: gettext('Choose a Cluster Template')}];
+      var availabilityZoneTitleMap = [{
+        value: '',
+        name: gettext('Choose an Availability Zone')
+      }];
       var keypairsTitleMap = [{value: '', name: gettext('Choose a Keypair')}];
-      var masterFlavorTitleMap = [{value: '',
-        name: gettext('Choose a Flavor for the Master Node')}];
-      var workerFlavorTitleMap = [{value: '',
-        name: gettext('Choose a Flavor for the Worker Node')}];
+      var masterFlavorTitleMap = [{
+        value: '',
+        name: gettext('Choose a Flavor for the Master Node')
+      }];
+      var workerFlavorTitleMap = [{
+        value: '',
+        name: gettext('Choose a Flavor for the Worker Node')
+      }];
       var networkTitleMap = [{value: '', name: gettext('Choose an existing network')}];
+      var subnetTitleMap = [{value: '', name: gettext('Choose an existing subnet')}];
       var ingressTitleMap = [{value: '', name: gettext('Choose an ingress controller')}];
 
       var addonsTitleMap = [];
@@ -72,13 +79,13 @@
       schema = {
         type: 'object',
         properties: {
-          'name': { type: 'string' },
-          'cluster_template_id': { type: 'string' },
-          'availability_zone': { type: 'string' },
-          'keypair': { type: 'string' },
+          'name': {type: 'string'},
+          'cluster_template_id': {type: 'string'},
+          'availability_zone': {type: 'string'},
+          'keypair': {type: 'string'},
           'addons': {
             type: 'array',
-            items: { type: 'object' },
+            items: {type: 'object'},
             minItems: 0
           },
 
@@ -86,29 +93,29 @@
             type: 'number',
             minimum: 1
           },
-          'master_flavor_id': { type: 'string' },
+          'master_flavor_id': {type: 'string'},
           'node_count': {
             type: 'number',
             minimum: 0
           },
-          'flavor_id': { type: 'string' },
-          'auto_scaling_enabled': { type: 'boolean' },
+          'flavor_id': {type: 'string'},
+          'auto_scaling_enabled': {type: 'boolean'},
           'min_node_count': {
             type: 'number',
             minimum: 0
           },
-          'max_node_count': { type: 'number' },
+          'max_node_count': {type: 'number'},
 
           'master_lb_enabled': {type: 'boolean'},
-          'create_network': { type: 'boolean' },
-          'fixed_network': { type: 'string' },
-          'floating_ip_enabled': { type: 'boolean' },
-          'ingress_controller': { type: 'object' },
+          'create_network': {type: 'boolean'},
+          'fixed_network': {type: 'string'},
+          'floating_ip_enabled': {type: 'boolean'},
+          'ingress_controller': {type: 'object'},
 
-          'auto_healing_enabled': { type: 'boolean' },
+          'auto_healing_enabled': {type: 'boolean'},
 
-          'labels': { type: 'string' },
-          'override_labels': { type: 'boolean' }
+          'labels': {type: 'string'},
+          'override_labels': {type: 'boolean'}
         }
       };
 
@@ -121,7 +128,7 @@
 
       // Disable the Master Count field, if only a single master is allowed
       var isSingleMasterNodeWatcher = $scope.$watch(
-        function() { return model.isSingleMasterNode; },
+        function() {return model.isSingleMasterNode;},
         function(isSingle) {
           if (typeof isSingle !== 'undefined') {
             formMasterCount.readonly = isSingle;
@@ -131,7 +138,7 @@
 
       form = [
         {
-          type:'tabs',
+          type: 'tabs',
           tabs: [
             {
               title: gettext('Details'),
@@ -209,7 +216,7 @@
                           template: '<div class="alert alert-info">' +
                             '<span class="fa fa-info-circle"></span> ' +
                             gettext('The selected Cluster Template does not support ' +
-                            'multiple master nodes.') +
+                              'multiple master nodes.') +
                             '</div>',
                           condition: 'model.isSingleMasterNode == true'
                         },
@@ -255,7 +262,7 @@
                             model.min_node_count = MODEL_DEFAULTS.min_node_count;
                             model.max_node_count = MODEL_DEFAULTS.max_node_count;
 
-                            if (isAutoScaling) { autosetScalingModelValues(); }
+                            if (isAutoScaling) {autosetScalingModelValues();}
                           }
                         },
                         {
@@ -332,7 +339,11 @@
                           onChange: function(isNewNetwork) {
                             if (isNewNetwork) {
                               model.fixed_network = MODEL_DEFAULTS.fixed_network;
+                            } else {
+                              model.fixed_network = '';
                             }
+                            subnetTitleMap.length = 1;
+                            model.fixed_subnet = '';
                           }
                         },
                         {
@@ -340,6 +351,15 @@
                           type: 'select',
                           title: gettext('Use an Existing Network'),
                           titleMap: networkTitleMap,
+                          condition: 'model.create_network === false',
+                          required: true,
+                          onChange: fixedSubnetModelValues
+                        },
+                        {
+                          key: 'fixed_subnet',
+                          type: 'select',
+                          title: gettext('Use an Existing Subnet'),
+                          titleMap: subnetTitleMap,
                           condition: 'model.create_network === false',
                           required: true
                         }
@@ -452,8 +472,8 @@
                           template: '<div class="alert alert-warning">' +
                             '<span class="fa fa-warning"></span> ' +
                             gettext('Overriding labels already defined by the cluster ' +
-                            'template or workflow might result in unpredictable ' +
-                            'behaviour.') + '</div>',
+                              'template or workflow might result in unpredictable ' +
+                              'behaviour.') + '</div>',
                           condition: 'model.override_labels == true'
                         }
                       ]
@@ -486,6 +506,7 @@
           master_lb_enabled: false,
           create_network: true,
           fixed_network: '',
+          fixed_subnet: '',
           floating_ip_enabled: false,
           ingress_controller: '',
 
@@ -549,9 +570,9 @@
 
       function onGetAddons(response) {
         angular.forEach(response.data.addons, function(addon) {
-          addonsTitleMap.push({ value: addon, name: addon.name });
+          addonsTitleMap.push({value: addon, name: addon.name});
           // Pre-selected by default
-          if (addon.selected) { model.addons.push(addon); }
+          if (addon.selected) {model.addons.push(addon);}
         });
       }
 
@@ -573,7 +594,30 @@
           networkTitleMap.push({value: network.id, name: network.name + ' (' + network.id + ')'});
         });
 
-        setSingleItemAsDefault(response.data.items, 'fixed_network', 'id');
+        if (setSingleItemAsDefault(response.data.items, 'fixed_network', 'id') === true) {
+          fixedSubnetModelValues(response.data.items[0].id);
+        }
+      }
+
+      function fixedSubnetModelValues(networkId) {
+        if (!networkId) {
+          subnetTitleMap.length = 1;
+          model.fixed_subnet = '';
+        } else {
+          var params = {'network_id': networkId};
+          neutron.getSubnets(params).then(onGetSubnets);
+        }
+      }
+
+      function onGetSubnets(response) {
+        // remove all subnets from the subnetTileMap
+        subnetTitleMap.length = 1;
+        model.fixed_subnet = '';
+        angular.forEach(response.data.items, function(subnet) {
+          subnetTitleMap.push({value: subnet.id, name: subnet.name + ' (' + subnet.id + ')'});
+        });
+
+        setSingleItemAsDefault(response.data.items, 'fixed_subnet', 'id');
       }
 
       function onGetIngressControllers(response) {
@@ -592,7 +636,9 @@
       function setSingleItemAsDefault(itemsList, modelKey, itemKey) {
         if (itemsList.length === 1) {
           model[modelKey] = itemsList[0][itemKey];
+          return true;
         }
+        return false;
       }
 
       $scope.$on('$destroy', function() {
