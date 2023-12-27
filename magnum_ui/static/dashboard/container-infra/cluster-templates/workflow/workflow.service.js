@@ -30,8 +30,7 @@
     'horizon.framework.util.i18n.gettext',
     'horizon.app.core.openstack-service-api.magnum',
     'horizon.app.core.openstack-service-api.nova',
-    'horizon.app.core.openstack-service-api.glance',
-    'horizon.dashboard.container-infra.cluster-templates.distros'
+    'horizon.app.core.openstack-service-api.glance'
   ];
 
   function ClusterTemplateWorkflow(
@@ -41,8 +40,7 @@
     gettext,
     magnum,
     nova,
-    glance,
-    distros
+    glance
   ) {
     var workflow = {
       init: init,
@@ -524,8 +522,7 @@
     function onGetImages(response) {
       images = [{value:"", name: gettext("Choose an Image")}];
       angular.forEach(response.data.items, function(item) {
-        if (!angular.isUndefined(item.properties) &&
-          distros.indexOf(item.properties.os_distro) >= 0) {
+        if (!angular.isUndefined(item.properties) {
           images.push({value: item.name, name: item.name});
         }
       });

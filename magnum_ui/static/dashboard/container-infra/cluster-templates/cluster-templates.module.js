@@ -33,7 +33,6 @@
       'horizon.dashboard.container-infra.cluster-templates.details'
     ])
     .constant('horizon.dashboard.container-infra.cluster-templates.events', events())
-    .constant('horizon.dashboard.container-infra.cluster-templates.distros', distros())
     .constant(
       'horizon.dashboard.container-infra.cluster-templates.resourceType',
       'OS::Magnum::ClusterTemplate')
@@ -51,16 +50,6 @@
       CREATE_SUCCESS: 'horizon.dashboard.container-infra.cluster-templates.CREATE_SUCCESS',
       DELETE_SUCCESS: 'horizon.dashboard.container-infra.cluster-templates.DELETE_SUCCESS'
     };
-  }
-
-  /**
-   * @ngdoc constant
-   * @name distros
-   * @return [distros] available image distros
-   * @description A list available image distros for magnum
-  */
-  function distros() {
-    return ["bke-os", "coreos", "fedora-atomic", "fedora-coreos", "ubuntu"];
   }
 
   run.$inject = [
