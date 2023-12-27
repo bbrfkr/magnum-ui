@@ -522,7 +522,7 @@
     function onGetImages(response) {
       images = [{value:"", name: gettext("Choose an Image")}];
       angular.forEach(response.data.items, function(item) {
-        if (!angular.isUndefined(item.properties) {
+        if (!angular.isUndefined(item.properties)) {
           images.push({value: item.name, name: item.name});
         }
       });
